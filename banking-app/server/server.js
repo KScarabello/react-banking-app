@@ -69,6 +69,18 @@ app.get('/auth/callback', passport.authenticate('auth0', {
     failureRedirect: 'http://localhost:3002/#/'
 }))
 
+app.get('/auth/me', (req, res) => {
+    if(!user){
+        return res.status(404).send('User not found')
+    } else{
+        res.status(200).send(req.user)
+    }
+})
+
+app.get('/auth/logout', (req, res) => {
+    req.logOut();
+    return res.redirect(302, 'http://localhost:3002/#/');
+})
 
 app.listen(port, () => {
     console.log(`Listening on port: ${port}`);
