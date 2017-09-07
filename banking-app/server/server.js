@@ -36,7 +36,7 @@ passport.use(new Auth0Strategy({
     const db = app.get('db');
 
     db.find_user(profile.id).then(user => {
-        console.log(user)
+        // console.log(user)
         if(user[0]){
             return done(null, user);
         } else {
@@ -50,13 +50,13 @@ passport.use(new Auth0Strategy({
 
 //THIS IS INVOKED ONE TIME TO SET THINGS UP
 passport.serializeUser(function(user, done){
-    console.log(user)
+    console.log('a')
     done(null, user)
 })
 
 //USER COMES FROM SESSION - THIS IS INVOKED FOR EVERY ENDPOINT
 passport.deserializeUser(function(user, done) {
-    console.log(user)
+    console.log('b')
     app.get('db').find_session_user(user[0].id).then(user => {
         return done(null, user[0]);
     })
@@ -70,7 +70,7 @@ app.get('/auth/callback', passport.authenticate('auth0', {
 }))
 
 app.get('/auth/me', (req, res) => {
-    if(!user){
+    if(!req.user){
         return res.status(404).send('User not found')
     } else{
         res.status(200).send(req.user)
